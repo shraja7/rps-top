@@ -1,51 +1,40 @@
-let choices =[ 'rock', 'paper', 'scissors' ]
+const choices = ['rock', 'paper', 'scissors'];
+let playerScore = 0;
+let computerScore = 0;
+let scoreBoard = document.getElementById("scoreBoard");
 
-const getComputerChoice = (params) => {
-    //will return a random choice from the choices array
-    let randomChoice = Math.floor(Math.random() * 3)
-    return choices[randomChoice]
-}
-//
-console.log('computer selection: ', getComputerChoice())
 
-//set player choice to whatever the user clicks on the dom based on the button values
-const playerSelection = 'rock'
-const computerSelection = getComputerChoice();
 
-//function to determine the winner
-const playRound = (playerSelection, computerSelection) => {
-//if player and computer choose the same thing, it's a tie
-    if (playerSelection === computerSelection) {
-        return 'It\'s a tie'
-    }
-//if player chooses rock
-    if (playerSelection === 'rock') {
-        if (computerSelection === 'paper') {
-            return 'You lose! Paper beats rock'
-        } else {
-            return 'You win! Rock beats scissors'
+const playerSelection = (choice) => {
+
+    let computerChoice = choices[Math.floor(Math.random() * choices.length)];
+    if (choice === computerChoice) {
+        scoreBoard.innerHTML = `Its a tie. Player: ${playerScore} Computer: ${computerScore}`;
+    } else if (
+        (choice === 'rock' && computerChoice === 'scissors') ||
+        (choice === 'paper' && computerChoice === 'rock') ||
+        (choice === 'scissors' && computerChoice === 'paper')
+    ) {
+        playerScore++;
+        if (playerScore === 5) {
+            scoreBoard.innerHTML = `Player wins. Final score: ${playerScore} to ${computerScore}`;
+            return;
         }
-    }
-//if player chooses paper
-    if (playerSelection === 'paper') {
-        if (computerSelection === 'scissors') {
-            return 'You lose! Scissors beats paper'
-        } else {
-            return 'You win! Paper beats rock'
+        scoreBoard.innerHTML = `Player wins this round. Player: ${playerScore} Computer: ${computerScore}`;
+    } else {
+        computerScore++;
+        if (computerScore === 5) {
+            scoreBoard.innerHTML = `Computer wins. Final score: ${computerScore} to ${playerScore}`;
+            return;
         }
+        scoreBoard.innerHTML = `Computer wins this round. Player: ${playerScore} Computer: ${computerScore}`;
     }
-//if player chooses scissors
-    if (playerSelection === 'scissors') {
-        if (computerSelection === 'rock') {
-            return 'You lose! Rock beats scissors'
-        } else {
-            return 'You win! Scissors beats paper'
-        }
-    }
+};
 
 
-}
-
-//play a round
-console.log('Player selection: ' + playerSelection)
-console.log(playRound(playerSelection, computerSelection))
+const buttons = document.querySelectorAll("button");
+buttons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+        playerSelection(e.target.value);
+    });
+});
